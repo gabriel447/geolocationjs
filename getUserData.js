@@ -1,3 +1,9 @@
+var crd = null;
+var success = function success(pos) { crd = pos.coords; };
+var error = function error() { console.log('erro'); };
+var options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+
+navigator.geolocation.getCurrentPosition(success, error, options);
 
 async function getIP() {
     try {
@@ -5,20 +11,13 @@ async function getIP() {
         const data = await response.json();
         return data.origin;
     } catch (error) {
-        console.error("Erro ao buscar o IP:", error);
+        return null; 
     }
 }
 
-function getUserData(pos) {
-    var ip = getIP();
-    var userData = {
-        ip: ip,
+const data = {
+        ip: getIP(),
         userAgent: navigator.userAgent,
-        latitude: pos.coords.latitude,
-        longitude: pos.coords.longitude
-    };
-
-    console.log(userData);
-}
-
-navigator.geolocation.getCurrentPosition(getUserData);
+        latitude: crd.latitude,
+        longitude: crd.longitude,
+};
